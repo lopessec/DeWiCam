@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <!--<item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_info_black_24dp"
+            android:title="Info" />-->
+        <item
+            android:id="@+id/nav_start"
+            android:icon="@drawable/ic_track_changes_black_24dp"
+            android:title="Start" />
+        <!--<item
+            android:id="@+id/nav_capture"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Capture" />-->
+        <item
+            android:visible="false"
+            android:id="@+id/nav_analysis"
+            android:icon="@drawable/ic_find_in_page_black_24dp"
+            android:title="Analysis" />
+    </group>
+
+    <item android:title="What's more">
+
+        <menu>
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Settings" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_menu_share"
+                android:title="About" />
+
+            <item
+                android:id="@+id/nav_exit"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="Exit" />
+        </menu>
+    </item>
+
+</menu>

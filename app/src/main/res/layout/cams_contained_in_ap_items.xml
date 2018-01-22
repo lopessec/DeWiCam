@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:padding="2dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_linked_camera_black_24dp"
+        android:scaleType="center"
+        android:contentDescription="camera_icon" />
+    <TextView
+        android:layout_weight="4"
+        android:layout_marginTop="3dp"
+        android:text="Macaddr"
+        android:id="@+id/cams_contained_in_ap_lists_macaddr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="time"
+        android:id="@+id/cams_contained_in_ap_lists_cost_time"
+        android:layout_marginTop="3dp"
+        android:layout_weight="0.5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:id="@+id/cams_contained_in_ap_lists_resolution"
+        android:layout_weight="1"
+        android:layout_marginTop="3dp"
+        android:text="Resolve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/cams_contained_in_ap_lists_isinhome_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_hourglass_empty_black_24dp" />
+
+    <ImageView
+        android:id="@+id/cams_contained_in_ap_lists_audio_icon"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="audio"
+        app:srcCompat="@drawable/ic_mic_off_black_24dp"
+        android:scaleType="center" />
+
+</LinearLayout>

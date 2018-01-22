@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="1dp"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <ImageView
+        android:id="@+id/imageview_start"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/ui_description_logo"
+        android:paddingBottom="10dp"
+        android:scaleType="centerInside"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/launcher_icon2" />
+
+
+    <ImageView
+        android:id="@+id/progressBar_start_page_capture_speed"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:layout_below="@id/imageview_start"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="?attr/colorButtonNormal"
+        android:contentDescription="@string/ui_description_banner"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageview_start" />
+
+
+    <org.usslab.decam.UI.ModPreference.SpeedChart
+        android:id="@+id/line_chart_view"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar_start_page_capture_speed" />
+
+
+    <TextView
+        android:id="@+id/textview_cumulative_count_int"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="0.5"
+        android:gravity="center|end"
+        android:text="0"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintLeft_toRightOf="@+id/radioButton_advanced_mode"
+        app:layout_constraintRight_toLeftOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/radioButton_fast_mode"
+        tools:text="000000" />
+
+    <ImageView
+        android:id="@+id/progressBar_start_page_capture_speed_button_divider"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:background="?attr/colorButtonNormal"
+        android:contentDescription="@string/ui_description_banner"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/line_chart_view" />
+
+    <TextView
+        android:id="@+id/radioButton_advanced_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_weight="1"
+        android:checked="false"
+        android:fontFamily="sans-serif"
+        android:text="@string/ui_text_count"
+        android:textStyle="bold"
+        tools:text="@string/ui_text_count"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline2"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/radioButton_fast_mode" />
+
+    <TextView
+        android:id="@+id/radioButton_fast_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="17dp"
+        android:layout_weight="1"
+        android:checked="false"
+        android:duplicateParentState="false"
+        android:fontFamily="sans-serif"
+        android:text="@string/ui_text_speed"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar_start_page_capture_speed"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline2" />
+
+    <TextView
+        android:id="@+id/textview_capture_speed_int"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="0.5"
+        android:gravity="center|end"
+        android:text="@string/ui_text_norun"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/radioButton_fast_mode"
+        app:layout_constraintRight_toLeftOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar_start_page_capture_speed" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/ap_containCams_result_recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/progressBar_start_page_capture_speed_button_divider"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:nestedScrollingEnabled="false"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar_start_page_capture_speed_button_divider" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <RadioButton
+        android:id="@+id/_part_start_op_imageview_0"
+        android:layout_width="27dp"
+        android:layout_height="41dp"
+        android:checked="true"
+        android:scaleType="fitCenter"
+        android:visibility="visible"
+        app:srcCompat="@drawable/shape_oval"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar_start_page_capture_speed"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline2"
+        android:layout_marginRight="8dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline2"
+        app:layout_constraintGuide_begin="36dp"
+        android:orientation="vertical" />
+
+
+</android.support.constraint.ConstraintLayout>
+

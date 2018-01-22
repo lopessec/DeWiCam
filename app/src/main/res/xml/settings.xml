@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="@string/title_activity_settings"
+    android:summary="">
+
+    <ListPreference
+        android:defaultValue="11"
+        android:summary="%s"
+        android:dialogIcon="@drawable/ic_router_black_24dp"
+        android:entries="@array/entries_list_channel_text"
+        android:entryValues="@array/entries_list_channel_value"
+        android:icon="@drawable/ic_router_black_24dp"
+        android:key="@string/pref_default_listen_channel"
+        android:title="Default Listen Channel" />
+
+    <PreferenceScreen
+        android:icon="@drawable/ic_gavel_black_24dp"
+        android:summary="tap to change algo's parameters"
+        android:title="Algorithm Config">
+        <org.usslab.decam.UI.ModPreference.ModPrefEdit
+            android:defaultValue="300"
+            android:summary="%s"
+            android:key="@string/pref_key_algo_seq_len"
+            android:title="@string/pref_key_algo_seq_len"
+            android:singleLine="true" />
+
+        <org.usslab.decam.UI.ModPreference.ModPrefEdit
+            android:defaultValue="5 95"
+            android:key="@string/pref_key_algo_1"
+            android:title="@string/pref_key_algo_1"
+            android:summary="%s"
+            android:singleLine="true"/>
+        <org.usslab.decam.UI.ModPreference.ModPrefEdit
+            android:defaultValue="10 15 3"
+            android:key="@string/pref_key_algo_2"
+            android:title="@string/pref_key_algo_2"
+            android:summary="%s"
+            android:singleLine="true"/>
+        <org.usslab.decam.UI.ModPreference.ModPrefEdit
+            android:defaultValue="100 0 500"
+            android:key="@string/pref_key_algo_3"
+            android:title="@string/pref_key_algo_3"
+            android:summary="%s"
+            android:singleLine="true"/>
+
+
+
+    </PreferenceScreen>
+
+
+    <PreferenceScreen
+        android:icon="@drawable/ic_folder_open_black_24dp"
+        android:summary="choose something to save"
+        android:title="File storage">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_switch_dump_packets"
+            android:summary=""
+            android:summaryOff="wireless traffic won't be saved"
+            android:summaryOn="wireless traffic will be saved"
+            android:title="Dump TCP" />
+
+        <!--<EditTextPreference
+            android:defaultValue="/sdcard/decam/tcpdump"
+            android:icon="@drawable/ic_folder_open_black_24dp"
+            android:key="dump_tcp_file_position_key"
+            android:summary="Select a folder to save the dump file"
+            android:title="DumpTCP file position" />-->
+
+        <com.github.angads25.filepicker.view.FilePickerPreference
+            android:key="@string/pref_key_str_tcpdumpfiles_folder"
+            android:icon="@drawable/ic_folder_open_black_24dp"
+            android:title="DumpTCP Directory"
+            android:summary=""
+            android:defaultValue="/sdcard/decam/cap"
+            app:error_dir="/mnt"
+
+            app:root_dir="/sdcard"
+            app:selection_mode="single_mode"
+            app:selection_type="dir_select"
+            app:extensions="pcap"/>
+
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="switch_preference_logging_info"
+            android:summary=""
+            android:summaryOff="application debug info won't be saved"
+            android:summaryOn="application debug info will be saved"
+            android:title="Logging" />
+        <!--<EditTextPreference
+            android:defaultValue="/sdcard/decam/logging"
+            android:icon="@drawable/ic_folder_open_black_24dp"
+
+            android:key="logging_file_position_dump_key"
+            android:summary="Select a folder to save the log file"
+            android:title="Logging file position" />-->
+
+        <com.github.angads25.filepicker.view.FilePickerPreference
+            android:key="@string/pref_key_str_loggingfiles_folder"
+            android:icon="@drawable/ic_folder_open_black_24dp"
+            android:title="Logging Directory"
+            android:summary=""
+            android:defaultValue="/sdcard/decam/log"
+            app:error_dir="/mnt"
+            app:root_dir="/sdcard"
+            app:selection_mode="single_mode"
+            app:selection_type="dir_select"
+            app:extensions="log"/>
+
+    </PreferenceScreen>
+
+    <PreferenceCategory android:title="View">
+        <EditTextPreference
+            android:defaultValue="ZJUWLAN,"
+            android:key="view_filterd_ssid"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:icon="@drawable/ic_find_in_page_black_24dp"
+            android:summary="type those SSID if needn't, split them with [,]or space"
+            android:title="Filter SSID" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Port Bind">
+        <Preference android:title="Reset"
+            android:icon="@drawable/ic_sync_black_24dp"
+            android:key="@string/pref_btn_clear_nexmon"
+            android:summary="Click to reset PortBind"/>
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
+
+    <!--
+     对于该文件需要注意以下几点
+     第一：位置。该文件的位置是在res/xml/下的。
+     第二：格式，PreferenceScreen为根标签，ListPreference为子标签。PreferenceScreen可以看作是一个大的框架
+     第三：标签属性含义
+     android:key 唯一标识符，和android:id相类似，PreferenceManager可以以其为参数通过findPreference获取指定的preference
+     注意，这个android:key的值也是Preference文件里面的XML“键”名
+     android:title 大标题
+     android:summary 标题下面的小字（这个要作为选项卡才有）
+     android:entries 弹出的对话框中，列表显示的文本内容，注意哦，这里指定的是一个数组哦
+     android:entryValues 与android:entries相对应的值
+     android:defaultValue 当对应值不存在时的默认值
+     android:dialogTitle 弹出的对话框中的标题信息
+     更多的标签设置等你来发掘
+     -->
