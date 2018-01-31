@@ -35,7 +35,6 @@ import org.usslab.decam.R;
 import org.usslab.decam.UI.ModPreference.SpeedChart;
 import org.usslab.decam.Util.Logg;
 
-import lecho.lib.hellocharts.view.LineChartView;
 
 public class StartMainOpActivity extends BaseActivity {
     public static final String TAG = "StartMainOpActivity";
@@ -53,9 +52,6 @@ public class StartMainOpActivity extends BaseActivity {
     private Intent intentCaptureService;
     private RecyclerView aPCamsListView;
     private SpeedChart lineChartView;
-
-
-
 
     private CaptureService.CaptureBinder captureBinder;
     private ServiceConnection connection = new ServiceConnection() {
@@ -108,8 +104,6 @@ public class StartMainOpActivity extends BaseActivity {
 
         intentCaptureService = new Intent(StartMainOpActivity.this, CaptureService.class);
         bindService(intentCaptureService, connection, BIND_AUTO_CREATE);
-
-
     }
 
     private class FabClickListener implements View.OnClickListener {
@@ -121,9 +115,7 @@ public class StartMainOpActivity extends BaseActivity {
             if (!captureBinder.getRunningFlag()) {
                 //stop->run;show stopbuttom;
                 fabUp.setImageResource(R.drawable.ic_stop_white_24dp);
-
                 captureBinder.startCapture();
-                //mkToast("Start Capture~");
 
                 //speed Mark:
                 new Thread(new UpdateCaptureSpeed(), "CaptureCountT").start();

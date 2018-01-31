@@ -7,6 +7,9 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 /**
  * Created by pip on 2017/1/28.

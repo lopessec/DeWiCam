@@ -8,7 +8,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import org.usslab.decam.Algo.Constants;
 import org.usslab.decam.Algo.Core;
@@ -32,21 +31,21 @@ import java.util.Locale;
 import java.util.Set;
 
 public class CaptureService extends BaseService {
-    public static final String TAG="CapSer";
-    public static final int CAPTURE_NOTIFICATION_ID=66;
-    public static final String CAPTURE_NOTIFICATION_TITLE="NexmonCapture";
-    public static final String CAPTURE_NOTIFICATION_CONTENT="Status:running";
+    public static final String TAG = "CapSer";
+    public static final int CAPTURE_NOTIFICATION_ID = 66;
+    public static final String CAPTURE_NOTIFICATION_TITLE = "NexmonCapture";
+    public static final String CAPTURE_NOTIFICATION_CONTENT = "Status:running";
     private static MonitorModeController controller;
     private SocketTask socketTask;
     private String filename;
     //private List<Packet> packetList;
-    private List<PacketInfo> packetInfoList,fastModepacketInfolist,motionConfirmPckInfoList;
+    private List<PacketInfo> packetInfoList, fastModepacketInfolist, motionConfirmPckInfoList;
     private PacketInfo packetInfo;
     private APinfo aPinfo;
     private Integer packetCount;
     //private ViewCallListener reclistview,startview;
     private CaptureBinder mBinder;
-    private boolean runningFlag,needMotionConfirmFlag;
+    private boolean runningFlag, needMotionConfirmFlag;
 
     //Algo part
     private Core algoCore;
@@ -58,11 +57,11 @@ public class CaptureService extends BaseService {
 
     private List<ResultAPCams> dataUsedInAdatpre;
 
-    private long startTime,stopTime;
+    private long startTime, stopTime;
     private APAdapter apAdapter;
     private RecyclerView aPCamsListView;
 
-    private CaptureListener listener=new CaptureListener() {
+    private CaptureListener listener = new CaptureListener() {
         @Override
         public void onStart(String currentFilename) {
             Constants.setValueFromSettings();
@@ -72,34 +71,31 @@ public class CaptureService extends BaseService {
             algoRes.ap_Cams_infomation.clear();
             dataUsedInAdatpre.clear();
 
-            packetCount=0;
-            needMotionConfirmFlag=true;
-            CaptureService.this.filename=currentFilename;
+            packetCount = 0;
+            needMotionConfirmFlag = true;
+            CaptureService.this.filename = currentFilename;
             //startTime=System.currentTimeMillis();
-
 
             APinfo.clearCache();
             CAMinfo.cleanInfo();
             CAMinfo.setStarttime(System.currentTimeMillis());
 
-
-
-            algoRes.countCameraNumbers=0;
+            algoRes.countCameraNumbers = 0;
             apAdapter.notifyDataSetChanged();
-            if (true){
+            if (true) {
                 //fast mode
                 algoCore.updateList(fastModepacketInfolist);
-            }else {
+            } else {
                 //advance mode
                 //Deprecated!!!
                 throw new UnsupportedOperationException("advance mode not implemented");
             }
 
 
-            Logg.i(TAG,"Capture Start");
+            Logg.i(TAG, "Capture Start");
             startForeground(
                     CAPTURE_NOTIFICATION_ID,
-                    getNotification(CAPTURE_NOTIFICATION_TITLE,CAPTURE_NOTIFICATION_CONTENT)
+                    getNotification(CAPTURE_NOTIFICATION_TITLE, CAPTURE_NOTIFICATION_CONTENT)
             );
             //UI init;
 
@@ -108,8 +104,8 @@ public class CaptureService extends BaseService {
         @Override
         public void onStop() {
             //UI become static;
-            stopTime=System.currentTimeMillis();
-            Logg.d(TAG,"Capture Stopped");
+            stopTime = System.currentTimeMillis();
+            Logg.d(TAG, "Capture Stopped");
             //stopForeground(true);
 
         }
@@ -117,31 +113,32 @@ public class CaptureService extends BaseService {
         @Override
         public void onFail() {
             //make an alert;
-            Logg.d(TAG,"Capture Failed,check Logging");
+            Logg.d(TAG, "Capture Failed,check Logging");
             //stopForeground(true);
         }
 
         @Override
         public void onProgress(Packet aPacket) {
 
-                //async problem when stopFlag set,but last packet do not finish.Cause Null pointer.
-                //always happend in multithreads programming.
-            packetCount=aPacket.getsequenceCount();
-            if(aPacket.isBeacon()){
-                try{
-                    String bssid=aPacket.getBSSIDfromBeacon();
-                    String ssid =aPacket.getSSIDfromBeacon();
-                    APinfo.insertMacNamePair(bssid,ssid);
-                }catch (Exception e){
-                    Logg.e(TAG,"Ignored:Beacon Error",e);
+            //async problem when stopFlag set,but last packet do not finish.Cause Null pointer.
+            //always happend in multithreads programming.
+            packetCount = aPacket.getsequenceCount();
+            int length = aPacket.getFullLength();
+            if (aPacket.isBeacon()) {
+                try {
+                    String bssid = aPacket.getBSSIDfromBeacon();
+                    String ssid = aPacket.getSSIDfromBeacon();
+                    APinfo.insertMacNamePair(bssid, ssid);
+                } catch (Exception e) {
+                    Logg.e(TAG, "Ignored:Beacon Error", e);
                 }
-            }else if (aPacket.isValidQosPacket()){
-                packetInfo=aPacket.buildQosPacketInfo();
-                if (packetInfo==null){
+            } else if (aPacket.isValidQosPacket()) {
+                packetInfo = aPacket.buildQosPacketInfo();
+                if (packetInfo == null) {
                     return;
                 }
-                String apacketSrcMac=packetInfo.macSrc;
-                if (BlackMacLists.isBlackMac(apacketSrcMac)){
+                String apacketSrcMac = packetInfo.macSrc;
+                if (BlackMacLists.isBlackMac(apacketSrcMac)) {
                     //this apacket's MAC found in blacklists;
                     return;
                 }
@@ -150,14 +147,13 @@ public class CaptureService extends BaseService {
                 packetInfoList.add(packetInfo);
                 fastModepacketInfolist.add(packetInfo);
                 if (needMotionConfirmFlag &&
-                        motionConfirmCollector!=null &&
+                        motionConfirmCollector != null &&
                         motionConfirmCollector.isAlive())
                     motionConfirmPckInfoList.add(packetInfo);
 
-
-                if (fastModepacketInfolist.size()== Core.FASTMODE_CONDUCT_PACKET_INFO_LIST_LEN){
-                    Logg.i(TAG,"Fastlist counts fill $,run algo"
-                            .replace("$",Integer.toString(Core.FASTMODE_CONDUCT_PACKET_INFO_LIST_LEN))
+                if (fastModepacketInfolist.size() == Core.FASTMODE_CONDUCT_PACKET_INFO_LIST_LEN) {
+                    Logg.i(TAG, "Fastlist counts fill $,run algo"
+                            .replace("$", Integer.toString(Core.FASTMODE_CONDUCT_PACKET_INFO_LIST_LEN))
                     );
                     algoCore.fastMode(algoRes);//call up update algorithm in this case;
                     fastModepacketInfolist.clear();
@@ -166,24 +162,24 @@ public class CaptureService extends BaseService {
                     dataConverter.convertAlgoToAdater(algoRes);
                     apAdapter.notifyDataSetChanged();
 
-                    if (algoRes.ap_Cams_infomation.size()>0){
+                    if (algoRes.ap_Cams_infomation.size() > 0) {
                         //represent has 1 camera at least
                         //call up a thread collect packetInfo for N seconds, then pass to Algo of motion;
                         //finally update CAMInfo and UI;
-                        if (false)
-                        if (needMotionConfirmFlag)
-                        if (motionConfirmCollector==null || !motionConfirmCollector.isAlive() ){
-                            motionConfirmCollector=new Thread(new MotionConfirmCollectorRunnable(),
-                                    "motionConfirmCollector");
-                            //motionConfirmCollector.start();
+                        if (needMotionConfirmFlag) {
+                            if (motionConfirmCollector == null || !motionConfirmCollector.isAlive()) {
+                                motionConfirmCollector = new Thread(new MotionConfirmCollectorRunnable(),
+                                        "motionConfirmCollector");
+                                motionConfirmCollector.start();
+                            }
                         }
                     }
 
                 }
             }
 
-                //call Update RecyclerView's list;
-                //Log.i("Packet",packetList.size()+"" );
+            //call Update RecyclerView's list;
+            //Log.i("Packet",packetList.size()+"" );
         }
     };
 
@@ -199,34 +195,33 @@ public class CaptureService extends BaseService {
 
         //requests STORAGE permission;
 
-        aPinfo=new APinfo();
-        packetCount=0;
-        controller=new MonitorModeController();
-        packetInfoList=new ArrayList<>();
-        fastModepacketInfolist=new ArrayList<>();
-        motionConfirmPckInfoList=new ArrayList<>();
+        aPinfo = new APinfo();
+        packetCount = 0;
+        controller = new MonitorModeController();
+        packetInfoList = new ArrayList<>();
+        fastModepacketInfolist = new ArrayList<>();
+        motionConfirmPckInfoList = new ArrayList<>();
 
-        algoCore=new Core();
-        algoRes=new Core.ResultStru();
+        algoCore = new Core();
+        algoRes = new Core.ResultStru();
 
-        dataUsedInAdatpre=new ArrayList<>();
-        dataConverter=new ResAlgoToAPAdapter(dataUsedInAdatpre);
-        apAdapter=new APAdapter(dataUsedInAdatpre);
+        dataUsedInAdatpre = new ArrayList<>();
+        dataConverter = new ResAlgoToAPAdapter(dataUsedInAdatpre);
+        apAdapter = new APAdapter(dataUsedInAdatpre);
 
-        mBinder=new CaptureBinder();
-        runningFlag=false;
-        needMotionConfirmFlag=false;
+        mBinder = new CaptureBinder();
+        runningFlag = false;
+        needMotionConfirmFlag = false;
     }
 
-    public class CaptureBinder extends Binder{
+    public class CaptureBinder extends Binder {
 
-        public void startCapture(){
+        public void startCapture() {
 
-            if(socketTask==null){
-                runningFlag=(!runningFlag);
+            if (socketTask == null) {
+                runningFlag = (!runningFlag);
 
-
-                socketTask=new SocketTask(listener);
+                socketTask = new SocketTask(listener);
                 socketTask.execute();
 
                 controller.mstartMonitorMode();
@@ -234,80 +229,97 @@ public class CaptureService extends BaseService {
                 //引用类型（reference type）指向一个对象，不是原始值，指向对象的变量是引用变量
             }
         }
-        public void stopCapture(){
-            if (socketTask!=null){
-                runningFlag=(!runningFlag);
+
+        public void stopCapture() {
+            if (socketTask != null) {
+                runningFlag = (!runningFlag);
                 controller.mstopMonitorMode();
                 socketTask.stopSocket();
-                socketTask=null;//release objects;
+                socketTask = null;//release objects;
                 stopForeground(true);
 
             }
         }
 
-        public String getCurrentFileName(){
+        public String getCurrentFileName() {
             return filename;
         }
-        public void setChannel(String value){
+
+        public void setChannel(String value) {
             controller.msetWlanChannel(value);
         }
-        public String getChannel(){
+
+        public String getChannel() {
             return controller.mgetWlanChannel();
         }
 
-        public boolean getRunningFlag(){return runningFlag;}
-        public List<PacketInfo> getPacketlist(){
+        public boolean getRunningFlag() {
+            return runningFlag;
+        }
+
+        public List<PacketInfo> getPacketlist() {
             return CaptureService.this.packetInfoList;
         }
-        public Integer getPacketCount(){
+
+        public Integer getPacketCount() {
             return CaptureService.this.packetCount;
         }
 
-        public void bindAPCamsListView(RecyclerView listx){
-            aPCamsListView=listx;
+        public void bindAPCamsListView(RecyclerView listx) {
+            aPCamsListView = listx;
             aPCamsListView.setAdapter(apAdapter);
         }
 
     }
-    private class MotionConfirmCollectorRunnable implements Runnable{
+
+    private class MotionConfirmCollectorRunnable implements Runnable {
 
         @Override
         public void run() {
-
             motionConfirmPckInfoList.clear();
             //keep current cameras mac list;
-            Set<String> currentCamsMacList=CAMinfo.getCameraList();
+            Set<String> currentCamsMacList = CAMinfo.getCameraList();
             CAMinfo.setConductingIsHomed(true);
-            if (currentCamsMacList.size()==0){
-                Logg.w(TAG,"currentCamsMacList.size==0");
+            if (currentCamsMacList.size() == 0) {
+                Logg.w(TAG, "currentCamsMacList.size==0");
                 return;
             }
-            try{
+            int firstPointer = 0;
+            int secondPointer = 0;
+            int thirdPointer = 0;
+            try {
+                doVibrate();
+                mkToast("Stay still for $ seconds~".replace("$", MotionConfirm.TIME_GAP[0]+""));
+                Thread.sleep(MotionConfirm.TIME_GAP[0] * 1000);
+                firstPointer = motionConfirmPckInfoList.size();
 
-                mkToast("Keep quite~");
-                Thread.sleep(MotionConfirm.TIME_GAP[0]*1000);
-                mkToast("Move UpUpU!");
-                Thread.sleep(MotionConfirm.TIME_GAP[1]*1000);
-                mkToast("Keep quite~");
-                Thread.sleep(MotionConfirm.TIME_GAP[2]*1000);
-            }catch (Exception e){
-                Logg.e(TAG,"Error in MotionConfirm",e);
+                doVibrate();
+                Thread.sleep(1000);
+                mkToast("Move around the room for $ seconds!".replace("$", MotionConfirm.TIME_GAP[1]+""));
+                Thread.sleep(MotionConfirm.TIME_GAP[1] * 1000);
+                secondPointer = motionConfirmPckInfoList.size();
+
+                doVibrate();
+                Thread.sleep(1000);
+                mkToast("Stay still for $ seconds~".replace("$", MotionConfirm.TIME_GAP[2]+""));
+                Thread.sleep(MotionConfirm.TIME_GAP[2] * 1000);
+                thirdPointer = motionConfirmPckInfoList.size();
+            } catch (Exception e) {
+                Logg.e(TAG, "Error in MotionConfirm", e);
             }
-            for(String acamsMac:currentCamsMacList){
-                boolean currentACamMacsIsHomed=MotionConfirm
-                        .confirmAMacsPacketInfo(acamsMac,motionConfirmPckInfoList);
+            for (String acamsMac : currentCamsMacList) {
+                boolean currentACamMacsIsHomed = MotionConfirm
+                        .confirmAMacsPacketInfo(acamsMac, motionConfirmPckInfoList, firstPointer, secondPointer, thirdPointer);
                 if (CAMinfo.isACamera(acamsMac))
-                    CAMinfo.setIsHomed(acamsMac,currentACamMacsIsHomed);
+                    CAMinfo.setIsHomed(acamsMac, currentACamMacsIsHomed);
                 else
-                    Logg.w(TAG,String.format(Locale.CHINA,"Unknown Camera mac:%s",acamsMac));
+                    Logg.w(TAG, String.format(Locale.CHINA, "Unknown Camera mac:%s", acamsMac));
             }
             CAMinfo.setConductingIsHomed(false);
 
 
-
-
             //keep it will run only once Now;
-            needMotionConfirmFlag=false;
+            needMotionConfirmFlag = false;
         }
     }
 
@@ -320,7 +332,8 @@ public class CaptureService extends BaseService {
     private NotificationManager getNotificationManager() {
         return (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
-    private Notification getNotification(String title,String content) {
+
+    private Notification getNotification(String title, String content) {
         Intent intent = new Intent(this, StartMainOpActivity.class);
 
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);

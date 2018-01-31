@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import java.lang.StackTraceElement;
 import android.content.Context;
+import android.os.Vibrator;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
@@ -15,6 +16,7 @@ import org.usslab.decam.Util.Logg;
 
 public class BaseService extends Service {
     public static String TAG="BaseService";
+    Vibrator vibrator = null;
     public BaseService() {
 
     }
@@ -57,6 +59,15 @@ public class BaseService extends Service {
         if (ActivityCollector.activities.size()>0)
             ActivityCollector.activities.get(0).runOnUiThread(toastFromserve);
 
+    }
+
+    protected void doVibrate() {
+        if (ActivityCollector.activities.size()>0) {
+            vibrator = (Vibrator) ActivityCollector.activities.get(0).getSystemService(VIBRATOR_SERVICE);
+        }
+        if (vibrator != null) {
+            vibrator.vibrate(1*1000);
+        }
     }
 
 }
